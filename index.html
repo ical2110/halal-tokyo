@@ -977,10 +977,13 @@ const CHECK_STATUS = {
   <script>
 /* =========================================================
    HALAL TOKYO — Aplikasi utama
+   Dibungkus IIFE agar variabel lokal ($) tidak bentrok
+   dengan pustaka html5-qrcode yang mendefinisikan global $.
    ========================================================= */
+(() => {
 
 const $  = (s, r=document) => r.querySelector(s);
-const $ = (s, r=document) => [...r.querySelectorAll(s)];
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
 // ---------- State ----------
 let state = {
@@ -1407,8 +1410,8 @@ function renderTips(){
 function switchTab(tab){
   if(tab!=="scan") stopScan();   // hentikan kamera saat keluar tab scan
   state.tab = tab;
-  $(".tabbar button").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
-  $(".screen").forEach(s=>s.classList.toggle("active", s.id==="screen-"+tab));
+  $$(".tabbar button").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
+  $$(".screen").forEach(s=>s.classList.toggle("active", s.id==="screen-"+tab));
   window.scrollTo({top:0, behavior:"instant"});
   if(tab==="resto") renderRestos();
   if(tab==="product") renderProducts();
@@ -1423,7 +1426,7 @@ function renderAll(){
 // ---------- Events ----------
 function init(){
   // tabs
-  $(".tabbar button").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+  $$(".tabbar button").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
 
   // resto search + filters
   $("#restoSearch").addEventListener("input", e=>{ state.query=e.target.value; renderRestos(); });
@@ -1485,6 +1488,8 @@ function init(){
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+})();
 
 </script>
   <script>
